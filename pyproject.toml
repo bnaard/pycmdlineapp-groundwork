@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "pycmdlineapp-groundwork"
+version = "0.1.0"
+description = "Startingpoint for any python-based commandline app with configuration, argument-parsing, help and logging prepared."
+authors = ["bnaard <bnaard@gmx.net>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+typer = "^0.3.2"
+pyaml = "^20.4.0"
+schema = "^0.7.3"
+Jinja2 = "^2.11.2"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.6.0"
+pytest = "^6.2.1"
+pytest-cov = "^2.11.1"
+pytest-mock = "^3.5.1"
+autopep8 = "^1.5.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+[tool.autopep8]
+max_line_length = 120
+aggressive = true
