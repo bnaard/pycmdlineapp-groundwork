@@ -11,6 +11,7 @@ typer = "^0.3.2"
 pyaml = "^20.4.0"
 schema = "^0.7.3"
 Jinja2 = "^2.11.2"
+deepmerge = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.6.0"
@@ -32,3 +33,6 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 [tool.autopep8]
 max_line_length = 120
 aggressive = true
+
+[tool.pylint]
+max-line-length = 120
