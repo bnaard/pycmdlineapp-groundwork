@@ -12,6 +12,7 @@ pyaml = "^20.4.0"
 schema = "^0.7.3"
 Jinja2 = "^2.11.2"
 deepmerge = "^0.1.1"
+pytest = "^6.2.2"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.6.0"
@@ -29,6 +30,7 @@ log_cli = true
 log_cli_level = "DEBUG"
 log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+addopts = "--doctest-modules"
 
 [tool.autopep8]
 max_line_length = 120
