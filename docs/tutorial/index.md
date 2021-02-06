@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Tutorial
-nav-order: 2
+title: Tutorial - User Guide
+nav-order: 1
 ---
 
 # Tutorial: How to use pycmdlineapp-groundwork
