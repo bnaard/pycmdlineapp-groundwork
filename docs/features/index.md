@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Features
-nav-order: 1
+nav-order: 2
 ---
 
 # Features of pycmdlineapp-groundwork

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Development - Contributing
-nav-order: 1
+nav-order: 5
 ---
 
 # Contributing to pycmdlineapp-groundwork
