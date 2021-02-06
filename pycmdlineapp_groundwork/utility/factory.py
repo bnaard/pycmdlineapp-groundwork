@@ -1,58 +1,28 @@
-from typing import Sequence, Tuple, Union
-from collections import namedtuple
+from typing import Type
+from pycmdlineapp_groundwork.utility.type_descriptors import TypeDescriptors
 
-class BuildObjectTypes:
-    class BuildObjectType:
-        _elements: Tuple[str,int,str]
 
-        @property
-        def name(self) -> str:
-            return self._elements[0]
-        @property
-        def key(self) -> int:
-            return self._elements[1]
-        @property
-        def description(self) -> str:
-            return self._elements[2]
-
-    _types:Sequence[Sequence[Tuple[str,int,str]]]= list()
-
-    def __init__(self):
+class GenericObject:
+    def __init__(self, **kwargs):
         pass
 
-    def __getitem__(self, key: int = None) -> Union[Tuple[str,int,str],None]:
-        return next(((aname,akey,adescription) for aname,akey,adescription in self._types if akey == key), None)
+    def get(self):
+        return self.message
 
-    def __getitem__(self, name: str = None) -> Union[Tuple[str,int,str],None]:
-        return next(((aname,akey,adescription) for aname,akey,adescription in self._types if aname == name), None)
-
-    def __setitem__(self, name: str = None, description: str = None) -> Tuple[str,int,str]:
-        return self.add(name= name, description= description) 
-
-
-    def __getattribute__(self, attribute:str) -> Union[Tuple[str,int,str],None]:
-        next(((aname,akey,adescription) for aname,akey,adescription in self._types if aname == attribute), None)
-
-
-    def add(self, name:str = None, description:str = None) -> Tuple[str,int,str]:
-        key= self.len(self._types)+1
-        self._types.append((name if name is not None else "", key, description if description is not None else "" ))
-        return self._types[-1]
-
-    def __call__(self, name:str = None, description:str = None) -> Tuple[str,int,str]:
-        return self.add(name= name, description= description)
 
 
 
 class GenericBuilder:
-    def __init__(self):
-        self._message_count = 0   
-
-    def __call__(self) -> None:
-        self._message_count += 1
+    def __init__(self, type_descriptior_key: int = None, **kwargs ):
+        if type_descriptior_key is None:
+            raise ValueError("GenericBuilder: type_descriptor_key cannot be None.")
+        self._type_descriptor_key= type_descriptior_key
+        
+    def __call__(self, **kwargs) -> None:
+        pass
 
     def get_count(self) -> int: 
-        return self._message_count
+        return 0
 
 
 class ObjectFactory:
@@ -79,3 +49,16 @@ class ObjectFactory:
 
     def __call__(self, key, **kwargs):
         return self.create(key, **kwargs)
+
+
+class ObjectProvider(ObjectFactory):
+    def __init__(self):
+        super().__init__()
+        self._type_descriptors: TypeDescriptors = TypeDescriptors()
+        return self
+
+    def register_type(self, name: str = None, description: str = None, builder: GenericBuilder= None, **kwargs):
+        if name is not None and description is not None:
+            type_descriptor_key= self._type_descriptors[str]= description
+            self.register_builder( type_descriptor_key, builder(**kwargs)\
+                if builder is not None else GenericBuilder(type_descriptor_key= type_descriptor_key, **kwargs) )
