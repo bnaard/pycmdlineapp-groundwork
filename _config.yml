@@ -1,4 +1,4 @@
-title: "Remote theme example"
+title: "pycmdapp-groundwork"
 remote_theme: pmarsceill/just-the-docs
 description: A baseline for creating Python based command line applications.
 baseurl: "/pycmdlineapp-groundwork" 
