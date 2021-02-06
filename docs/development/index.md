@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Development
+title: Development - Contributing
 nav-order: 1
 ---
 
