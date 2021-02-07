@@ -28,6 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install poetry
         poetry install
+        poetry shell
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with pylint
       run: |
