@@ -7,4 +7,3 @@ Documentation: [https://bnaard.github.io/pycmdlineapp-groundwork/](https://bnaar
 Inspired by:
 
 - [https://realpython.com/factory-method-python/](https://realpython.com/factory-method-python/)
-
