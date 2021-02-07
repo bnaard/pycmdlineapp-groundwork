@@ -43,7 +43,7 @@ def test_generic_builder_with_generic_artifact(example_auto_str_descriptor_value
     builder.register(example_int_descriptor_value, GenericBuildArtifact)
     assert example_int_descriptor_value in builder._registry
     assert builder._registry[example_int_descriptor_value] == GenericBuildArtifact
-    assert str(builder) == "Builder GenericBuilder building {<ExampleAutoStrDescriptor.value1_name: 'value1_name'>: <class 'pycmdlineapp_groundwork.factory.builder.GenericBuildArtifact'>, <ExampleIntDescriptor.value1_name: 42>: <class 'pycmdlineapp_groundwork.factory.builder.GenericBuildArtifact'>}"
+    assert str(builder) == "Builder 'GenericBuilder' building {<ExampleAutoStrDescriptor.value1_name: 'value1_name'>: <class 'pycmdlineapp_groundwork.factory.builder.GenericBuildArtifact'>, <ExampleIntDescriptor.value1_name: 42>: <class 'pycmdlineapp_groundwork.factory.builder.GenericBuildArtifact'>}"
 
 
 class SpecificBuildArtifact(GenericBuildArtifact):
