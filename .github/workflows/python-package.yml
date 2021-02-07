@@ -29,7 +29,6 @@ jobs:
         python -m pip install poetry
         poetry config virtualenvs.in-project true
         poetry install
-        source ./.venv/bin/activate
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with pylint
       run: |
@@ -37,7 +36,7 @@ jobs:
       continue-on-error: true
     - name: Test with pytest
       run: |
-        pytest --doctest-modules --cov-report=html
+        ./.venv/bin/pytest --doctest-modules --cov-report=html
     - name: Upload pytest test results
       uses: actions/upload-artifact@v2
       with:
