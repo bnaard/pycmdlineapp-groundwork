@@ -5,7 +5,7 @@ baseurl: "/pycmdlineapp-groundwork"
 url: "https://bnaard.github.io" 
 
 permalink: pretty
-exclude: ["LICENSE.txt"]
+exclude: ["LICENSE.txt", "README.md"]
 
 # Regression tests
 # By default, the pages in /docs/tests are excluded when the ste is built.
