@@ -40,7 +40,9 @@ jobs:
     - name: Upload pytest test results
       uses: actions/upload-artifact@v2
       with:
-        path: test-results-${{ matrix.python-version }}.html
+        path: | 
+          test-results-${{ matrix.python-version }}.html
+          assets/*
     - name: Upload test coverage results
       uses: actions/upload-artifact@v2
       with:
