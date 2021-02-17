@@ -1,27 +1,9 @@
 from typing import Type, TypeVar, Union
 
 from .descriptor import StrDescriptor, IntDescriptor, auto
+from .generic_build_artefact import GenericBuildArtifact
 
 
-
-class GenericBuildArtifact:
-    """Empty base class from whoch all objects need to be derived that shall be built with
-    GenericBuilder or any derived class
-    Example:
-    ```python
-    >>> class MyClass(GenericBuildArtifact):
-    ...     def __init__(self, some_arg):
-    ...         self._some= some_arg
-    >>> class MyDescriptor(IntDescriptor):
-    ...     myclass= auto()
-    >>> builder= GenericBuilder(MyDescriptor.myclass, MyClass, 42)
-    >>> obj= builder()
-    >>> obj._some
-    42
-
-    ```
-    """
-    pass
 
 TGenericBuildArtifact= TypeVar("TGenericBuildArtifact", bound= GenericBuildArtifact)
 
@@ -49,22 +31,30 @@ class GenericBuilder:
 
     ```
     """
-    def __init__(self, type_descriptor_key: Union[StrDescriptor,IntDescriptor],\
-        artifact_type: Type[TGenericBuildArtifact], *args, **kwargs ):
+    def __init__(self, type_descriptor_key: Union[None,StrDescriptor,IntDescriptor]= None,\
+        artifact_type: Union[None,Type[TGenericBuildArtifact]]= None, *args, **kwargs ):
         """Initialize the generic object builder class and register a first Descriptor/Class-to-be-built pair.
         Args:
             type_descriptor_key (Union[StrDescriptor,IntDescriptor]): The enum-derived descriptor identifying the class-object to be built.
             artifact_type: (Type[TGenericBuildArtifact]): The class type to be built. Must be derived from GenericBuildArtifact
             *args, *kwargs: arbitrary positional and/or keyword arguments that are stored and handed to the class-constructor when creating 
                 one of the registered objects. Kind of fixed arguments that any class built by this builder receives.
+        Raises:
+            ValueError: In case only one of type_descriptor_key or artifact_type is None, as in this case, it is unclear what to build. 
         Returns:
             builder object
         """
         self._count: int= 0
-        self._fixed_args= args
-        self._fixed_kwargs= kwargs
+        self._fixed_args= list()
+        self._fixed_kwargs= {}
+        self.set_fixed_args(*args, **kwargs)
         self._registry= {}
-        self.register(type_descriptor_key, artifact_type)
+        if type_descriptor_key is not None and artifact_type is not None:
+            self.register(type_descriptor_key, artifact_type)
+        elif ( type_descriptor_key is not None and artifact_type is None ) or\
+            ( type_descriptor_key is None and artifact_type is not None ):
+            raise ValueError(f'{self.__class__.__name__}: type_descriptor_key {type_descriptor_key} or artifact_type {artifact_type} is None. Both need to have a value or both need to be None.')
+        self.init_hook()
 
     def __call__(self, type_descriptor_key: Union[StrDescriptor,IntDescriptor] = None, *args, **kwargs) -> TGenericBuildArtifact:
         """Creates an object identified by type_descriptor_key. The object type has to be registered using register().
@@ -120,11 +110,11 @@ class GenericBuilder:
         ...     foo= auto()
         >>> builder= GenericBuilder(MyDescriptor.foo, MyClass)
         >>> print(builder)
-        Builder 'GenericBuilder' building {<MyDescriptor.foo: '1'>: <class 'pycmdlineapp_groundwork.factory.builder.MyClass'>}
+        Builder 'GenericBuilder' building [foo: 1 => MyClass]
 
         ```
         """
-        return f'Builder \'{self.__class__.__name__}\' building {self._registry}'
+        return f'Builder \'{self.__class__.__name__}\' building [{", ".join([str(descriptor)+" => "+str(classtype.__name__) for descriptor,classtype in self._registry.items()])}]'
 
     def register(self, type_descriptor_key: Union[StrDescriptor,IntDescriptor],\
         artifact_type: Type[TGenericBuildArtifact]):
@@ -149,7 +139,7 @@ class GenericBuilder:
         >>> builder= GenericBuilder(MyDescriptor.foo, MyClass1)
         >>> builder.register(MyDescriptor.bar, MyClass2)
         >>> print(builder)
-        Builder 'GenericBuilder' building {<MyDescriptor.foo: '1'>: <class 'pycmdlineapp_groundwork.factory.builder.MyClass1'>, <MyDescriptor.bar: '2'>: <class 'pycmdlineapp_groundwork.factory.builder.MyClass2'>}
+        Builder 'GenericBuilder' building [foo: 1 => MyClass1, bar: 2 => MyClass2]
 
         ```
         """
@@ -161,6 +151,68 @@ class GenericBuilder:
             raise ValueError(f'{self.__class__.__name__}: artifact_type cannot be None.')
         self._registry[type_descriptor_key]= artifact_type
 
+
+    def set_fixed_args(self, *args, **kwargs) -> None:
+        """Add positional and/or key-word arguments to the arguments that will be passed on each build of an 
+        object to the constructor of the class to be instantiated. 
+        Args:
+            *args: Arbitrary positional arguments (can be no argument or any number of arguments).
+            **kwargs: Arbitrary list of keyword arguments (no argument or any number)
+        Returns:
+            None
+        Example:
+        ```python
+        >>> class MyClass1(GenericBuildArtifact):
+        ...     def __init__(self, posarg, keywordarg= None):
+        ...         self._arg= posarg
+        ...         self._keywordarg= keywordarg
+        >>> class MyClass2(GenericBuildArtifact):
+        ...     def __init__(self, posarg, additional_posarg, keywordarg=None, additional_keyword_arg= None):
+        ...         self._arg= posarg + additional_posarg
+        ...         self._keywordarg= keywordarg + additional_keyword_arg
+        >>> class MyDescriptor(StrDescriptor):
+        ...     foo= auto()
+        ...     bar= auto()
+        >>> builder= GenericBuilder()
+        >>> builder.register(MyDescriptor.foo, MyClass1)
+        >>> builder.register(MyDescriptor.bar, MyClass2)
+        >>> builder.set_fixed_args(42, keywordarg="johndoe")
+        >>> foo_obj= builder(MyDescriptor.foo)
+        >>> bar_obj= builder(MyDescriptor.bar, 42, additional_keyword_arg= "baz")
+        >>> (foo_obj._arg, foo_obj._keywordarg)
+        (42, 'johndoe')
+        >>> (bar_obj._arg, bar_obj._keywordarg)
+        (84, 'johndoebaz')
+
+        ```
+        """
+        for arg in args:
+            self._fixed_args.append(arg)
+
+        for key,value in kwargs.items():
+            self._fixed_kwargs[key]= value
+
+    def init_hook(self) -> None:
+        """Called at the end of __init__(). Avoids the need to overwrite __init__() in most cases.
+
+        Example:
+        ```python
+        >>> class MyClass(GenericBuildArtifact):
+        ...     def __init__(self, context= None):
+        ...         self._context= context
+        >>> class MyDescriptor(IntDescriptor):
+        ...     myclass= auto()
+        >>> class MyClassBuilder(GenericBuilder):
+        ...     def init_hook(self):
+        ...         self.set_fixed_args(context= "foobar")
+        >>> builder= MyClassBuilder(MyDescriptor.myclass, MyClass)
+        >>> obj1= builder(MyDescriptor.myclass)
+        >>> obj1._context
+        'foobar'
+
+        ```
+        """
+        pass
 
     def get_count(self) -> int: 
         """Get number of object built so far by this builder instance.

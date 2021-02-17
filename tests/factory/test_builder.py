@@ -20,10 +20,6 @@ def example_int_descriptor_value():
     yield ExampleIntDescriptor.value1_name
 
 
-def test_generic_build_artifact():
-    artifact= GenericBuildArtifact()
-    assert isinstance(artifact, GenericBuildArtifact)
-
 def test_generic_builder_with_generic_artifact(example_auto_str_descriptor_value, example_int_descriptor_value):
     builder= GenericBuilder(example_auto_str_descriptor_value, GenericBuildArtifact, 142, foo= "bar")
     assert builder._count == 0
@@ -43,8 +39,8 @@ def test_generic_builder_with_generic_artifact(example_auto_str_descriptor_value
     builder.register(example_int_descriptor_value, GenericBuildArtifact)
     assert example_int_descriptor_value in builder._registry
     assert builder._registry[example_int_descriptor_value] == GenericBuildArtifact
-    assert str(builder) == "Builder 'GenericBuilder' building {<ExampleAutoStrDescriptor.value1_name: 'value1_name'>: <class 'pycmdlineapp_groundwork.factory.builder.GenericBuildArtifact'>, <ExampleIntDescriptor.value1_name: 42>: <class 'pycmdlineapp_groundwork.factory.builder.GenericBuildArtifact'>}"
-
+    print(str(builder))
+    assert str(builder) == "Builder 'GenericBuilder' building [value1_name: value1_name => GenericBuildArtifact, value1_name: 42 => GenericBuildArtifact]"
 
 class SpecificBuildArtifact(GenericBuildArtifact):
     def __init__(self, positional_arg: str, foo: int = 12):
@@ -139,3 +135,17 @@ def test_generic_builder_with_wrong_argument_cases(fixed_pos_arg, fixed_keyword_
     else:
         pytest.fail()
 
+
+@pytest.mark.parametrize("type_descriptor_key, artefact_type", [
+        (ExampleIntDescriptor.value1_name, SpecificBuildArtifact), 
+        (None, SpecificBuildArtifact),
+        (ExampleIntDescriptor.value1_name, None)
+    ])
+def test_generic_builder_constructor_raises_exception(type_descriptor_key, artefact_type):
+    if (type_descriptor_key is None and artefact_type is not None) or\
+        (type_descriptor_key is not None and artefact_type is None):
+        with pytest.raises(ValueError):
+            builder= GenericBuilder(type_descriptor_key, artefact_type)
+    else:
+        builder= GenericBuilder(type_descriptor_key, artefact_type)
+        assert isinstance(builder, GenericBuilder)
