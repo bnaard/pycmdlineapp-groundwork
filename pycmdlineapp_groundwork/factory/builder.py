@@ -1,11 +1,8 @@
 from typing import Type, TypeVar, Union
 
 from .descriptor import StrDescriptor, IntDescriptor, auto
-from .generic_build_artefact import GenericBuildArtifact
+from .generic_build_artefact import GenericBuildArtifact, TGenericBuildArtifact
 
-
-
-TGenericBuildArtifact= TypeVar("TGenericBuildArtifact", bound= GenericBuildArtifact)
 
 
 class GenericBuilder:
@@ -236,3 +233,6 @@ class GenericBuilder:
         ```
         """
         return self._count
+
+
+TGenericBuilder= TypeVar("TGenericBuilder", bound= GenericBuilder)

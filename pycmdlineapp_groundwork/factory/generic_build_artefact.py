@@ -1,3 +1,4 @@
+from typing import TypeVar
 
 
 class GenericBuildArtifact:
@@ -5,3 +6,6 @@ class GenericBuildArtifact:
     GenericBuilder or any derived class
     """
     pass
+
+
+TGenericBuildArtifact= TypeVar("TGenericBuildArtifact", bound= GenericBuildArtifact)

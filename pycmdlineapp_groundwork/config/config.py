@@ -1,73 +1,26 @@
 import logging
 import logging.config
-import pathlib
-import enum
 
-import yaml
-import schema
-import deepmerge
+
+from schema import Schema
+
 
 from .default import CONFIG_FILE_LOCAL_DEFAULT, CONFIG_FILE_USERHOME_DEFAULT
-from ..utility.enum_mixins import IntStrEnumMixin
-
-
-class MessageTypes( IntStrEnumMixin, enum.Enum ):
-    unknown = 0, "UNKNOWN"
-    default = 1, "DEFAULT CONFIGURATION"
-    configuration = 2, "CONFIGURATION"
+from .generic_configuration import GenericConfiguration
 
 
 
-class GenericConfiguration:
-    def __init__(self):
-        self._configuration= {}
-    
-
-class DefaultConfiguration(GenericConfiguration):
-    def __init__(self):
-        pass
-
-class Configuration(GenericConfiguration):
-    pass
-
-class ConfigurationReader():
-    def load(self):
-        pass
-
-    def parse(self):
-        pass
-
-    def validate(self):
-        pass
-
-class ConfigurationYAMLReader(ConfigurationReader):
-    def load(self):
-        pass
-
-    def parse(self):
-        pass
-
-    def validate(self):
-        pass
+class ValidatedConfiguration(GenericConfiguration):
+    def __init__(self, schema: Schema):
+        super().__init__()
+        self._schema= schema
 
 
 
-class GenericConfigurationBuilder:
-    pass
-
-class DefaultConfigurationBuilder(GenericConfigurationBuilder):
-    pass
-
-class ConfigurationBuilder(GenericConfigurationBuilder):
-    pass
 
 
-class AbstractConfigurationFactory():
-    pass
 
 
-class ConfigurationProvider():
-    pass
 
 
 

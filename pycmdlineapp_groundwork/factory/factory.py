@@ -1,12 +1,8 @@
 from typing import Type, TypeVar, Union
 
 from .descriptor import StrDescriptor, IntDescriptor, auto
-from .generic_build_artefact import GenericBuildArtifact
-from .builder import GenericBuilder, TGenericBuildArtifact
-
-
-
-TGenericBuilder= TypeVar("TGenericBuilder", bound= GenericBuilder)
+from .generic_build_artefact import GenericBuildArtifact, TGenericBuildArtifact
+from .builder import GenericBuilder, TGenericBuilder
 
 
 class Factory:
