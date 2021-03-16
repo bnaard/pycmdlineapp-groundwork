@@ -11,9 +11,45 @@ from .generic_configuration import GenericConfiguration
 
 
 class ValidatedConfiguration(GenericConfiguration):
+    """Configuration object that has an associated schema powered by [schema](https://pypi.org/project/schema/)-library.
+    """
     def __init__(self, schema: Schema):
+        """Initializes a validated schema by setting the private property holding the configuration and by 
+        associating the `schema` definition.
+        Args:
+            schema: a dict-structure using [schema](https://pypi.org/project/schema/) library, against which the configuration is validated  
+        """
         super().__init__()
         self._schema= schema
+
+    def validate(self):
+        """Validate the configuration against the schema associated with this object.
+        Uses `schema.validate()`, which returns the validated configuration-dict. Stores the validated configuration
+        dict as new configuration. Note: This might lead to transformations (such as uppercasing) as per schema-definition.
+
+        Example:
+        ```python
+        >>> from io import StringIO
+        >>> from schema import Schema, And, Use
+        >>> from .reader import ConfigurationYAMLReader
+        >>> config_schema= Schema({str: And(str, Use(str.upper)), "johndoe": int})
+        >>> cfg= ValidatedConfiguration(config_schema)
+        >>> config_text= StringIO('foo: bar\\njohndoe: 42')
+        >>> stream_reader= ConfigurationYAMLReader(filepath_or_buffer= config_text, configuration= cfg)
+        >>> stream_reader.load()
+        >>> stream_reader.parse()
+        >>> stream_reader.merge()
+        >>> stream_reader.validate()
+        >>> stream_reader._configuration._configuration
+        {'foo': 'BAR', 'johndoe': 42}
+
+        ```
+        """
+        if not hasattr(self, "_schema") or self._schema is None: 
+            raise ValueError(f'{self.__class__.__name__}: No schema set, cannot validate configuration.')
+        self._configuration= self._schema.validate(self._configuration)
+
+
 
 
 
