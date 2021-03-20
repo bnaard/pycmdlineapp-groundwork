@@ -2,8 +2,10 @@
 
 __version__= "0.1.0"
 
-from climatecontrol.ext.pydantic import Climate as c
-from climatecontrol.cli_utils import click_settings_file_option
+from climatecontrol.ext.pydantic import Climate as ConfigManager
+
+from .config.click_config_option import click_config_option
+from .config.settings_doc import with_attrs_docs
 
 from .factory import GenericBuildArtifact, TGenericBuildArtifact, GenericBuilder, TGenericBuilder 
 from .factory import IntDescriptor, StrDescriptor, AutoStrDescriptor, auto
