@@ -24,7 +24,7 @@ jobs:
         python -m pip install poetry
         poetry config virtualenvs.in-project true
         poetry install
-        alias mkdocs=./.venv/bin/mkdocs
+        export PATH="$PATH:$PWD/.venv/bin"
 
     - uses: actions-ecosystem/action-get-latest-tag@v1
       id: get-latest-tag

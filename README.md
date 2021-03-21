@@ -7,13 +7,13 @@
 
 # Welcome to pycmdlineapp_groundworks
 
-pycmdlineapp_groundworks is an opinionated collection of libraries to jumpstart the development for mid-levele to complex python command-line applications.
+pycmdlineapp_groundworks is an opinionated collection of libraries, code and best-practice descriptions to jumpstart the development for mid-level to complex python command-line applications.
 
-The toolset solves the following challanges:
+The toolset solves the following challenges:
 
 | Challenge           | Description                          | Solution       |
 | :------------------ | :----------------------------------- | :------------- |
-| Commandline parsing |                                      | Uses click     |
+| Commandline parsing | Mulit-/Subcommand with arguments and options (all forms, like single, multiple, typed, with prompt, ...), validated and with automatic help | [click](https://click.palletsprojects.com/en/7.x/) provides all, is stables has an excellent help and a large community |
 | Settings management | Schema-validated, documented and probably pre-processed settings from different sources (config files, environment variables, .env files, secret files), coordinated with click default values and input from command-line arguments  | pydantic  |
 | Logging setup       | Update resource | ssss |
 | Multi-progress bar  | Thread-safe colored progressbar with options for multiple bars, counters and clutter-free printing of log-/error-messages | ssss |
