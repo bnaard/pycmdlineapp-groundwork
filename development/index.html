@@ -524,8 +524,8 @@
 <p>All productive documentation is hosted on <code>gh-pages</code>-branch of this repository. This is automatically managed and overwritten by the <code>mkdoc</code>-tools mentioned above. So, do not edit manually the <code>gh-pages</code>-branch as all your changes will be overwritten and lost on next documentation auto-build+deploy.</p>
 <p>In the Github actions, the latest version is retrieved using <a href="https://github.com/marketplace/actions/release-info-action">release-info-action</a> to build the latest documentation.</p>
 <p>While documentation updates including documentation versions on Github are automatically done based on latest tag information (see <code>.github/workflows/Docs.yml</code>), you need to run the following to locally build and serve the versioned documentation for preview on <a href="https://localhost:8000">https://localhost:8000</a>:</p>
-<div class="highlight"><pre><span></span><code>mike deploy --push --update-aliases <span class="m">0</span>.1.0 latest   <span class="c1"># replace 0.1.0 manually with the current version from pycmdlineapp_groundwork/__init__.py</span>
-mike set-default --push latest
+<div class="highlight"><pre><span></span><code>mike deploy --update-aliases <span class="m">0</span>.1.0 latest   <span class="c1"># replace 0.1.0 manually with the current version from pycmdlineapp_groundwork/__init__.py</span>
+mike set-default latest
 mike serve
 </code></pre></div>
 <p>Note that you have to run both commands to get a proper redirect to the latest documentation on <a href="https://localhost:8000">https://localhost:8000</a>. Refer to <a href="https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/">mkdocs-material documentation</a> and to <a href="https://github.com/jimporter/mike#usage">mike documentation</a> for details.</p>
