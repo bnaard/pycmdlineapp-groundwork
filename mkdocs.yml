@@ -17,13 +17,14 @@ repo_url: https://github.com/bnaard/pycmdlineapp-groundwork
 
 nav:
 - Overview: index.md
+- Install: install.md
+- Usage:
+    - Settings Management: usage/settings.md
 - Reference: 
     - Factory: reference/factory.md
-# - install.md
-# - Usage:
-#   - usage/models.md
-# - Contributing: contributing.md
-# - changelog.md
+- Contributing: contributing.md
+- Changelog: changelog.md
+- License: license.md
 
 markdown_extensions:
 - markdown_include.include:

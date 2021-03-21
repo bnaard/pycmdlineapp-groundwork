@@ -1,8 +1,8 @@
 <!-- markdownlint-disable MD025 -->
 
-# pycmdapp-groundwork
+# Welcome to pycmdlineapp_groundworks
 
-Documentation: [https://bnaard.github.io/pycmdlineapp-groundwork/](https://bnaard.github.io/pycmdlineapp-groundwork/)
+[Documentation](https://bnaard.github.io/pycmdlineapp-groundwork/index.html)
 
 Inspired by:
 
