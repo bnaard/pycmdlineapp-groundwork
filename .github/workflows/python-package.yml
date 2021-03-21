@@ -37,6 +37,7 @@ jobs:
     - name: Test with pytest
       run: |
         ./.venv/bin/pytest --doctest-modules --html=test-results-${{ matrix.python-version }}.html --cov-report=html --cov=./pycmdlineapp_groundwork/ .
+      continue-on-error: true
     - name: Upload pytest test results
       uses: actions/upload-artifact@v2
       with:
