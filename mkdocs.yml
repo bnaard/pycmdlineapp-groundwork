@@ -34,6 +34,9 @@ markdown_extensions:
     permalink: 🔗
 - pymdownx.highlight
 - pymdownx.extra
+- admonition
+- pymdownx.details
+- pymdownx.superfences
 
 plugins:
 - search
