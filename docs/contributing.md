@@ -8,7 +8,7 @@ Questions, feature requests and bug reports are all welcome as [discussions or i
 
 ## Security Policy
 
-tbd
+Please refer to our [Security Policy](https://github.com/bnaard/pycmdlineapp-groundwork/security/policy).
 
 ## Pull Requests
 
@@ -31,18 +31,20 @@ If you're looking for immediate possibilities to contribute, look out for the la
 
 Please follow these steps to contribute:
 
-1. Clone your fork and cd into the repo directory
+Clone your fork and cd into the repo directory
 
 ```bash
 git clone git clone https://github.com/bnaard/pycmdlineapp-groundwork.git
 cd pycmdlineapp-groundwork
 ```
 
-2. Set up a virtualenv and install dependencies
+Set up a virtualenv and install dependencies:
 
 ```bash
-
+poetry install
 ```
+
+
 
 https://github.com/bnaard/pycmdlineapp-groundwork.git
 
