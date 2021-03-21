@@ -25,7 +25,7 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install
 
-    - run: mkdocs build
+    - run: ./.venv/bin/mkdocs build
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
