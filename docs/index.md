@@ -1,3 +1,3 @@
 <!-- markdownlint-disable MD041 -->
 
-{!../Readme.md!}
+{!../README.md!}

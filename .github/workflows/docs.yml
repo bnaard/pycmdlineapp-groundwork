@@ -31,10 +31,9 @@ jobs:
 
     - run: |
         export PATH="$PATH:$PWD/.venv/bin"
-        which mkdocs
-        which mike
-        pwd
-        ls -al
+        sudo apt-get install jq
+        git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+        git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
         mike deploy --push --update-aliases ${{ steps.get-latest-tag.outputs.tag }} latest
         mike set-default --push latest
 
