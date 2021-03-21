@@ -34,8 +34,8 @@ jobs:
         sudo apt-get install jq
         git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
         git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
-        mike deploy --push --update-aliases ${{ steps.get-latest-tag.outputs.tag }} latest
-        mike set-default --push latest
+        mike deploy --update-aliases ${{ steps.get-latest-tag.outputs.tag }} latest
+        mike set-default latest
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
