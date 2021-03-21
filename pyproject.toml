@@ -7,13 +7,11 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-typer = "^0.3.2"
 pyaml = "^20.4.0"
 schema = "^0.7.3"
 Jinja2 = "^2.11.2"
 deepmerge = "^0.1.1"
 pytest = "^6.2.2"
-tentaclio = "^0.0.13"
 pydantic = "^1.8"
 click = "^7.1.2"
 climatecontrol = "^0.9.2"

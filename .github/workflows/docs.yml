@@ -25,6 +25,8 @@ jobs:
         poetry config virtualenvs.in-project true
         poetry install
         export PATH="$PATH:$PWD/.venv/bin"
+        echo $PATH
+        which mkdocs
 
     - uses: actions-ecosystem/action-get-latest-tag@v1
       id: get-latest-tag
