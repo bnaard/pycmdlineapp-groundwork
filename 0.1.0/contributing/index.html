@@ -363,6 +363,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#optional-vs-code-setup" class="md-nav__link">
+    Optional VS Code setup
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -454,6 +461,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#optional-vs-code-setup" class="md-nav__link">
+    Optional VS Code setup
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -479,8 +493,70 @@
                 <h1 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">🔗</a></h1>
 <p>We'd be happy to get your contirbution to this project!</p>
 <h2 id="issues">Issues<a class="headerlink" href="#issues" title="Permanent link">🔗</a></h2>
-<p>description tbd</p>
+<p>Questions, feature requests and bug reports are all welcome as <a href="https://github.com/bnaard/pycmdlineapp-groundwork/issues">discussions or issues</a>.</p>
 <h2 id="pull-requests">Pull Requests<a class="headerlink" href="#pull-requests" title="Permanent link">🔗</a></h2>
+<p>It's simple to get started and create a Pull Request. <em>pycmdlineapp_groundwork</em> has few dependencies, doesn't require compiling and tests don't need access to databases, etc.</p>
+<p><em>pycmdlineapp_groundwork</em> is released regularly so you should see your improvements release in a matter of weeks.</p>
+<p>!!! note
+    Unless your change is trivial (typo, docs tweak etc.), please create an issue to discuss the change before
+    creating a pull request.</p>
+<p>If you're looking for immediate possibilities to contribute, look out for the label <a href="https://github.com/github.com/bnaard/pycmdlineapp-groundwork/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22">"help wanted"</a> in <a href="(https://github.com/bnaard/pycmdlineapp-groundwork/issues)">issues</a>.</p>
+<p>Prerequsites:</p>
+<ul>
+<li>Mandatory: You need <a href="https://python-poetry.org/">python-poetry</a> installed.</li>
+<li>Optionally: You can work with <a href="https://code.visualstudio.com/">VS Code</a> and <a href="https://github.com/microsoft/vscode-dev-containers">developemnt containers</a>. See <a href="#Optional-VS-Code-setup">Optional VS Code Setup description</a></li>
+</ul>
+<p>Please follow these steps to contribute:</p>
+<ol>
+<li>Clone your fork and cd into the repo directory</li>
+</ol>
+<div class="highlight"><pre><span></span><code>git clone git clone https://github.com/bnaard/pycmdlineapp-groundwork.git
+<span class="nb">cd</span> pycmdlineapp-groundwork
+</code></pre></div>
+<ol>
+<li>Set up a virtualenv and install dependencies</li>
+</ol>
+<div class="highlight"><pre><span></span><code>
+</code></pre></div>
+<p>https://github.com/bnaard/pycmdlineapp-groundwork.git</p>
+<p>To make contributing as easy and fast as possible, you'll want to run tests and linting locally. Luckily,
+<em>pydantic</em> has few dependencies, doesn't require compiling and tests don't need access to databases, etc.
+Because of this, setting up and running the tests should be very simple.</p>
+<p>You'll need to have <strong>python 3.6</strong>, <strong>3.7</strong>, <strong>3.8</strong>, or <strong>3.9</strong>, <strong>virtualenv</strong>, <strong>git</strong>, and <strong>make</strong> installed.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. clone your fork and cd into the repo directory</span>
+git clone git@github.com:&lt;your username&gt;/pydantic.git
+<span class="nb">cd</span> pydantic
+
+<span class="c1"># 2. Set up a virtualenv for running tests</span>
+virtualenv -p <span class="sb">`</span>which python3.7<span class="sb">`</span> env
+<span class="nb">source</span> env/bin/activate
+<span class="c1"># (or however you prefer to setup a python environment, 3.6 will work too)</span>
+
+<span class="c1"># 3. Install pydantic, dependencies, test dependencies and doc dependencies</span>
+make install
+
+<span class="c1"># 4. Checkout a new branch and make your changes</span>
+git checkout -b my-new-feature-branch
+<span class="c1"># make your changes...</span>
+
+<span class="c1"># 5. Fix formatting and imports</span>
+make format
+<span class="c1"># Pydantic uses black to enforce formatting and isort to fix imports</span>
+<span class="c1"># (https://github.com/ambv/black, https://github.com/timothycrosley/isort)</span>
+
+<span class="c1"># 6. Run tests and linting</span>
+make
+<span class="c1"># there are a few sub-commands in Makefile like `test`, `testcov` and `lint`</span>
+<span class="c1"># which you might want to use, but generally just `make` should be all you need</span>
+
+<span class="c1"># 7. Build documentation</span>
+make docs
+<span class="c1"># if you have changed the documentation make sure it builds successfully</span>
+<span class="c1"># you can also use `make docs-serve` to serve the documentation at localhost:8000</span>
+
+<span class="c1"># ... commit, push, and create your pull request</span>
+</code></pre></div>
+<h2 id="optional-vs-code-setup">Optional VS Code setup<a class="headerlink" href="#optional-vs-code-setup" title="Permanent link">🔗</a></h2>
 <p>tbd</p>
                 
               
