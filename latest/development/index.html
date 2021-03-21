@@ -495,9 +495,10 @@
 <p>The project's dependencies, build-chain and deployment to <a href="https://pypi.org/">PyPI</a> is managed with <a href="https://python-poetry.org/">Python Poetry</a>.</p>
 <ul>
 <li>Main project information is manged in file <code>pyproject.toml</code></li>
-<li>Dependencies to the production are added by <code>poetry add &lt;pypi-package-name&gt;</code></li>
-<li>Dependencies only needed for development are added by <code>poetry add --dev &lt;pypi-package-name&gt;</code></li>
+<li>Dependencies to the production are added by <code>poetry add &lt;pypi-package-name&gt;</code> or removed by <code>poetry remove &lt;pypi-package-name&gt;</code></li>
+<li>Dependencies only needed for development are added by <code>poetry add --dev &lt;pypi-package-name&gt;</code> or removed by <code>poetry remove --dev &lt;pypi-package-name&gt;</code></li>
 </ul>
+<p>In case of problems, it usually helps to delete the automatically generated <code>poetry.lock</code>-file and to run <code>poetry install</code> to reinstall all dependencies with recalculation of dependency tree.</p>
 <h2 id="versioning">Versioning<a class="headerlink" href="#versioning" title="Permanent link">🔗</a></h2>
 <p>Versioning is managed also by <a href="https://python-poetry.org/">Python Poetry</a> using <a href="https://semver.org/lang/de/">SemVer</a>:</p>
 <ul>
@@ -509,7 +510,7 @@
 <ol>
 <li>Major/Minor/Patch version update using one of the above <code>poetry version</code> commands</li>
 <li>Manual update of <code>pycmdlineapp_groundwork/__init__.py:__version__</code></li>
-<li>Manual update of ``</li>
+<li>Manual update of command for rebuilding the documentation (only for preview locally, production versioning is handled in Github actions). See section <em>Documentation</em> below.</li>
 </ol>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">🔗</a></h2>
 <p>Documentation is build using <a href="https://www.mkdocs.org/">mkdocs</a> static page generator with several plugins which allow versioning, integration of docstring comments and deploying to <a href="https://docs.github.com/en/github/working-with-github-pages/getting-started-with-github-pages">Github pages</a>. The advantages of this approach are greater flexibility in page setup and design, integration of docstring comments and examples and simple local preview.</p>
@@ -522,6 +523,12 @@
 <p>The Github action described in <code>.github/workflows/docs.yml</code> is based on <a href="https://github.com/peaceiris/actions-gh-pages">GitHub Actions for GitHub Pages</a>, which builds and deploys mkdoc page structures and takes care that Github is serving those <em>as is</em> instead of using Jekyll.</p>
 <p>All productive documentation is hosted on <code>gh-pages</code>-branch of this repository. This is automatically managed and overwritten by the <code>mkdoc</code>-tools mentioned above. So, do not edit manually the <code>gh-pages</code>-branch as all your changes will be overwritten and lost on next documentation auto-build+deploy.</p>
 <p>In the Github actions, the latest version is retrieved using <a href="https://github.com/marketplace/actions/release-info-action">release-info-action</a> to build the latest documentation.</p>
+<p>While documentation updates including documentation versions on Github are automatically done based on latest tag information (see <code>.github/workflows/Docs.yml</code>), you need to run the following to locally build and serve the versioned documentation for preview on <a href="https://localhost:8000">https://localhost:8000</a>:</p>
+<div class="highlight"><pre><span></span><code>mike deploy --push --update-aliases <span class="m">0</span>.1.0 latest   <span class="c1"># replace 0.1.0 manually with the current version from pycmdlineapp_groundwork/__init__.py</span>
+mike set-default --push latest
+mike serve
+</code></pre></div>
+<p>Note that you have to run both commands to get a proper redirect to the latest documentation on <a href="https://localhost:8000">https://localhost:8000</a>. Refer to <a href="https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/">mkdocs-material documentation</a> and to <a href="https://github.com/jimporter/mike#usage">mike documentation</a> for details.</p>
                 
               
 
