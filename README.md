@@ -29,8 +29,12 @@ tbd
 
 tbd
 
-For further details please see [usage documentation]()
+For further details please see [documentation](https://bnaard.github.io/pycmdlineapp-groundwork/index.html))
 
 ## Documentation
 
 [Documentation](https://bnaard.github.io/pycmdlineapp-groundwork/index.html)
+
+## Contributing
+
+tbd
