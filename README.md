@@ -7,7 +7,7 @@
 
 # Welcome to pycmdlineapp_groundworks
 
-pycmdlineapp_groundworks is an opinionated collection of libraries, code and best-practice descriptions to jumpstart the development for mid-level to complex python command-line applications.
+*pycmdlineapp_groundworks* is an opinionated collection of libraries, code and best-practice descriptions to jumpstart the development for mid-level to complex python command-line applications (think: `git` command line client).
 
 ## Features
 
