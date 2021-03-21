@@ -43,8 +43,8 @@ In the Github actions, the latest version is retrieved using [release-info-actio
 While documentation updates including documentation versions on Github are automatically done based on latest tag information (see `.github/workflows/Docs.yml`), you need to run the following to locally build and serve the versioned documentation for preview on [https://localhost:8000](https://localhost:8000):
 
 ```bash
-mike deploy --push --update-aliases 0.1.0 latest   # replace 0.1.0 manually with the current version from pycmdlineapp_groundwork/__init__.py
-mike set-default --push latest
+mike deploy --update-aliases 0.1.0 latest   # replace 0.1.0 manually with the current version from pycmdlineapp_groundwork/__init__.py
+mike set-default latest
 mike serve
 ```
 
