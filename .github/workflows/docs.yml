@@ -24,12 +24,13 @@ jobs:
         python -m pip install poetry
         poetry config virtualenvs.in-project true
         poetry install
+        alias mkdocs=./.venv/bin/mkdocs
 
-    - name: Get Latest Release
-      id: latest_version
-      uses:  bnaard/pycmdlineapp-groundwork 
+    - uses: actions-ecosystem/action-get-latest-tag@v1
+      id: get-latest-tag
+      if: ${{ steps.release-label.outputs.level != null }}
 
-    - run: ./.venv/bin/mike deploy --push --update-aliases ${{ steps.latest_version.outputs.latest_tag }} latest
+    - run: ./.venv/bin/mike deploy --push --update-aliases ${{ steps.get-latest-tag.outputs.tag }} latest
     - run: ./.venv/bin/mike set-default --push latest
 
     - name: Deploy
