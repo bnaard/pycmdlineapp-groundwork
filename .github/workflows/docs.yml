@@ -24,8 +24,15 @@ jobs:
         python -m pip install poetry
         poetry config virtualenvs.in-project true
         poetry install
+    - name: Get Latest Release
+      id: latest_version
+      uses: abatilo/release-info-action@v1.3.0
+      with:
+        owner: abatilo
+        repo: release-info-action
 
-    - run: ./.venv/bin/mkdocs build
+    - run: ./.venv/bin/mike deploy --push --update-aliases ${{ steps.latest_version.outputs.latest_tag }} latest
+    - run: ./.venv/bin/mike set-default --push latest
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
