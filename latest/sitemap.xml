@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/install/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/usage/settings/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/reference/factory/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/contributing/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/changelog/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/development/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://bnaard.github.io/pycmdlineapp-groundwork/license/</loc>
+     <lastmod>2021-03-23</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>
