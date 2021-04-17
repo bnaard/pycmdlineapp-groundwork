@@ -2,7 +2,7 @@ from enum import Enum, IntEnum, auto
 
 
 class StrDescriptor(str, Enum):
-    """Defines a str-based enum to be used with command-line options and 
+    """Defines a str-based enum to be used with command-line options and
     in dict-like configurations validated with the [schema library](https://pypi.org/project/schema/)"""
 
     def __str__(self):
@@ -17,7 +17,7 @@ class StrDescriptor(str, Enum):
 
         ```
         """
-        return f'{self.name}: {self.value}'
+        return f"{self.name}: {self.value}"
 
     @classmethod
     def allowed_values(cls):
@@ -36,7 +36,7 @@ class StrDescriptor(str, Enum):
         >>> # Create a schema that accepts a dict with an key 'name' of type str, lowercases it, checks it against
         >>> # the values defined in enum (['bar', 'doe']) and returns the respective enum-type instead of the original str
         >>> # note the () in 'FooBar(v)' in the last 'Use'-term, where the names are retrieved from the enum.
-        >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar(v)))}) 
+        >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar(v)))})
         >>> schema.validate({'name': 'Doe'})
         {'name': <FooBar.john: 'doe'>}
 
@@ -49,7 +49,7 @@ class StrDescriptor(str, Enum):
         """Return the _names_ defined in an enum based on StrDescriptor class. This is useful for
         feeding the allowed names list into a [schema](https://pypi.org/project/schema/) definition
         and to translate them into enum-types instead of working with str throughout the application.
-        Pendant to allowed_values() and useful when values shall have a different purpose. For example, 
+        Pendant to allowed_values() and useful when values shall have a different purpose. For example,
         names can be used as input from config-file structures or command-line arguments/options, while
         values contain long descriptions.
         Example:
@@ -64,7 +64,7 @@ class StrDescriptor(str, Enum):
         >>> # Create a schema that accepts a dict with a key 'name' of type str, lowercases it, checks it against
         >>> # the names defined in enum (['foo', 'john']) and returns the respective enum-type instead of the original str
         >>> # note the [] in 'FooBar[v]' in the last 'Use'-term, where the names are retrieved from the enum.
-        >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar[v]))}) 
+        >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar[v]))})
         >>> schema.validate({'name': 'FOO'})
         {'name': <FooBar.foo: 'The bar that is foo'>}
 
@@ -74,7 +74,7 @@ class StrDescriptor(str, Enum):
 
 
 class AutoStrDescriptor(StrDescriptor):
-    """A convenience-version of the str-based enum to be used with command-line options and 
+    """A convenience-version of the str-based enum to be used with command-line options and
     in dict-like configurations validated with the schema library. If enum-names and values
     can be identical, the use of enum's auto() feature reduces boilerplate code.
     Example:
@@ -89,21 +89,22 @@ class AutoStrDescriptor(StrDescriptor):
     >>> # Create a schema that accepts a dict with a key 'name' of type str, lowercases it, checks it against
     >>> # the names defined in enum (['foo', 'john']) and returns the respective enum-type instead of the original str
     >>> # note the [] in 'FooBar[v]' in the last 'Use'-term, where the names are retrieved from the enum.
-    >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar[v]))}) 
+    >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar[v]))})
     >>> schema.validate({'name': 'FOO'})
     {'name': <FooBar.foo: 'foo'>}
 
     ```
     """
+
     def _generate_next_value_(name, start, count, last_values):
         """Internal function to generate next value automatically when calling auto()
         see [Python Documentation](https://docs.python.org/3/library/enum.html#using-automatic-values)
         """
-        return name    
+        return name
 
 
 class IntDescriptor(IntEnum):
-    """Defines an int-based enum to be used with command-line options and 
+    """Defines an int-based enum to be used with command-line options and
     in dict-like configurations validated with the [schema library](https://pypi.org/project/schema/)"""
 
     def __str__(self):
@@ -119,7 +120,7 @@ class IntDescriptor(IntEnum):
 
         ```
         """
-        return f'{self.name}: {self.value}'
+        return f"{self.name}: {self.value}"
 
     @classmethod
     def allowed_values(cls):
@@ -139,7 +140,7 @@ class IntDescriptor(IntEnum):
         >>> # Create a schema that accepts a dict with a key 'name' of type int, checks it against
         >>> # the values defined in enum ([42, 43]) and returns the respective enum-type instead of the original int
         >>> # note the () in 'FooBar(v)' in the last 'Use'-term, where the names are retrieved from the enum.
-        >>> schema= Schema({'name': And(int, Or(*allowed), Use(lambda v: FooBar(v)))}) 
+        >>> schema= Schema({'name': And(int, Or(*allowed), Use(lambda v: FooBar(v)))})
         >>> schema.validate({'name': 42})
         {'name': <FooBar.foo: 42>}
 
@@ -165,11 +166,10 @@ class IntDescriptor(IntEnum):
         >>> # Create a schema that accepts a dict with a key 'name' of type int, checks it against
         >>> # the names defined in enum (['foo', 'john']) and returns the respective enum-type instead of the original int
         >>> # note the [] in 'FooBar[v]' in the last 'Use'-term, where the names are retrieved from the enum.
-        >>> schema= Schema({'name': And(str, Or(*allowed), Use(lambda v: FooBar[v]))}) 
+        >>> schema= Schema({'name': And(str, Or(*allowed), Use(lambda v: FooBar[v]))})
         >>> schema.validate({'name': 'foo'})
         {'name': <FooBar.foo: 42>}
 
         ```
         """
         return [item.name for item in list(cls)]
-

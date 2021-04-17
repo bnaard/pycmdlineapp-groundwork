@@ -5,13 +5,29 @@ from pydantic import BaseSettings
 
 from pycmdlineapp_groundwork import ConfigManager, click_config_option, with_attrs_docs
 
-
+# Order of precendence for default values, input to command line options, 
+# lowest to highest, higher overwrites lower
+# 1. default values
+# 2. default config file config.yaml in current working directory
+# 3. default config file config.yaml in user home
+# 4. .env files
+# 5. environment variables set outside .env file
+# 6. secrets from secret-files
+# then command-line parsing
 
 @with_attrs_docs
 class RunServerSettings(BaseSettings):
     #: port number on which the server listens 
     port: int = 5555
-    user: str = None
+    #: server user name
+    user: str = ""
+    #: a test variable set by environment variable
+    fooenv: str = ""
+
+    class Config:
+        env_prefix = 'MY_APP_RUNSERVER__'
+        env_file = 'tests/test.env'
+
 
 @with_attrs_docs
 class Settings(BaseSettings):
@@ -42,9 +58,10 @@ def cli(ctx, debug):
 
 @cli.command()
 @click.option('--port', default=c.settings.runserver.port, help=RunServerSettings.__fields__["port"].field_info.description, show_default=True)
-@click.option('--user', default="", prompt=True, show_default=True)
+@click.option('--user', default=c.settings.runserver.user, help=RunServerSettings.__fields__["user"].field_info.description, prompt=True, show_default=True)
+@click.option('--foo', default=c.settings.runserver.fooenv, help=RunServerSettings.__fields__["fooenv"].field_info.description, show_default=True)
 @click.pass_context
-def runserver( ctx, port, user):
+def runserver( ctx, port, user, foo):
     click.echo(f'Serving {user} on http://127.0.0.1:{port}/' )
     click.echo(f'Context = {ctx.default_map}')
     click.echo(f'Climate: {c.settings}')
@@ -60,5 +77,5 @@ def test_hello_world():
 if __name__ == '__main__':
     cli()
 
-# python tests//test_climate.py --config="tests/example_cfg2.toml" --config="tests/example_cfg1.yaml" runserver
-# MY_APP_RUNSERVER__PORT=2222 python tests/test_climate.py --config="tests/example_cfg2.toml" --config="tests/example_cfg1.yaml" runserver
+# python tests/climate_poc.py --config="tests/example_cfg2.toml" --config="tests/example_cfg1.yaml" runserver
+# MY_APP_RUNSERVER__PORT=2222 python tests/climate_poc.py --config="tests/example_cfg2.toml" --config="tests/example_cfg1.yaml" runserver

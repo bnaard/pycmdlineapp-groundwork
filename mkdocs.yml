@@ -51,3 +51,9 @@ plugins:
 extra:
   version:
     provider: mike
+
+extra_css:
+  - stylesheets/asciinema-player.css
+extra_javascript:
+  - javascripts/asciinema-player.js
+  

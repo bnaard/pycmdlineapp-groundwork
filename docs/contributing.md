@@ -24,7 +24,9 @@ If you're looking for immediate possibilities to contribute, look out for the la
 
 ### Prerequsites
 
-- Mandatory: You need [python-poetry](https://python-poetry.org/) installed.
+- Mandatory: **python 3.8** or later installed
+- Mandatory: [python-poetry](https://python-poetry.org/) installed
+- Mandatory: **git** installed
 - Optionally: You can work with [VS Code](https://code.visualstudio.com/) and [development containers](https://github.com/microsoft/vscode-dev-containers). See [Optional VS Code Setup description](#optional-vs-code-setup).
 
 ### Development setup
@@ -44,50 +46,37 @@ Set up a virtualenv and install dependencies:
 poetry install
 ```
 
-
-
-https://github.com/bnaard/pycmdlineapp-groundwork.git
-
-To make contributing as easy and fast as possible, you'll want to run tests and linting locally. Luckily,
-*pydantic* has few dependencies, doesn't require compiling and tests don't need access to databases, etc.
-Because of this, setting up and running the tests should be very simple.
-
-You'll need to have **python 3.6**, **3.7**, **3.8**, or **3.9**, **virtualenv**, **git**, and **make** installed.
+Checkout a new branch and make your changes:
 
 ```bash
-# 1. clone your fork and cd into the repo directory
-git clone git@github.com:<your username>/pydantic.git
-cd pydantic
-
-# 2. Set up a virtualenv for running tests
-virtualenv -p `which python3.7` env
-source env/bin/activate
-# (or however you prefer to setup a python environment, 3.6 will work too)
-
-# 3. Install pydantic, dependencies, test dependencies and doc dependencies
-make install
-
-# 4. Checkout a new branch and make your changes
 git checkout -b my-new-feature-branch
-# make your changes...
-
-# 5. Fix formatting and imports
-make format
-# Pydantic uses black to enforce formatting and isort to fix imports
-# (https://github.com/ambv/black, https://github.com/timothycrosley/isort)
-
-# 6. Run tests and linting
-make
-# there are a few sub-commands in Makefile like `test`, `testcov` and `lint`
-# which you might want to use, but generally just `make` should be all you need
-
-# 7. Build documentation
-make docs
-# if you have changed the documentation make sure it builds successfully
-# you can also use `make docs-serve` to serve the documentation at localhost:8000
-
-# ... commit, push, and create your pull request
 ```
+
+Fix formatting and imports:
+
+_planned_ : using black to enforce formatting and isort to fix imports
+(https://github.com/ambv/black, https://github.com/timothycrosley/isort)
+
+
+Run linting
+
+_planned_ using flake8 as linter
+
+
+Run tests and coverage
+
+```bash
+pytest --cov=pycmdlineapp-groundwork
+```
+
+Build and preview documentation
+
+```bash
+mike deploy
+mike serve
+```
+
+... commit, push, and create your pull request
 
 ## Optional VS Code setup
 

@@ -38,7 +38,7 @@ The Github action described in `.github/workflows/docs.yml` is based on [GitHub 
 
 All productive documentation is hosted on `gh-pages`-branch of this repository. This is automatically managed and overwritten by the `mkdoc`-tools mentioned above. So, do not edit manually the `gh-pages`-branch as all your changes will be overwritten and lost on next documentation auto-build+deploy.
 
-In the Github actions, the latest version is retrieved using [release-info-action](https://github.com/marketplace/actions/release-info-action) to build the latest documentation.
+In the Github actions, the latest version is retrieved using [get-latest-tag](https://github.com/marketplace/actions/actions-ecosystem-action-get-latest-tag) to build the latest documentation.
 
 While documentation updates including documentation versions on Github are automatically done based on latest tag information (see `.github/workflows/Docs.yml`), you need to run the following to locally build and serve the versioned documentation for preview on [https://localhost:8000](https://localhost:8000):
 

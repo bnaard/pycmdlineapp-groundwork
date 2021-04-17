@@ -14,7 +14,7 @@ class Factory:
     ```python
     >>> class MyMessage(GenericBuildArtifact):
     ...     _context= ""
-    ...     _text= "" 
+    ...     _text= ""
     ...     def __str__(self):
     ...         return f'{self._context}: {self._text}'
     >>> class MyMessage1(MyMessage):
@@ -46,26 +46,29 @@ class Factory:
 
     ```
     """
+
     def __init__(self):
-        self._builder_registry= {}
+        self._builder_registry = {}
 
-
-    def register_builder(self, builder_type: Union[Type[TGenericBuilder], GenericBuilder],
-        type_descriptor_key: Union[StrDescriptor, IntDescriptor, None]= None,
-        artifact_type: Union[Type[TGenericBuildArtifact], None]= None ) -> None:
+    def register_builder(
+        self,
+        builder_type: Union[Type[TGenericBuilder], GenericBuilder],
+        type_descriptor_key: Union[StrDescriptor, IntDescriptor, None] = None,
+        artifact_type: Union[Type[TGenericBuildArtifact], None] = None,
+    ) -> None:
         """Register a builder, either by giving the builders class, the descriptor and the class type it shall create
         or by giving an already instantiated builder object. After registering, calling the factory with a descriptor uses
         the registeredbuilder to build the associated objects.
         Args:
             type_descriptor_key: The enum-derived descriptor identifying the class-object to be built.
             builder_type: The builder used to create instances of the artifact type. Must be derived from GenericBuilder.
-            artifact_type: The class type to be built. Must be derived from GenericBuildArtifact. 
+            artifact_type: The class type to be built. Must be derived from GenericBuildArtifact.
 
         Example:
         ```python
         >>> class MyMessage(GenericBuildArtifact):
         ...     _context= ""
-        ...     _text= "" 
+        ...     _text= ""
         ...     def __str__(self):
         ...         return f'{self._context}: {self._text}'
         >>> class MyMessage1(MyMessage):
@@ -97,30 +100,55 @@ class Factory:
         ```
         """
         if builder_type is None:
-            raise ValueError(f'{self.__class__.__name__}: builder_type cannot be None.')
+            raise ValueError(f"{self.__class__.__name__}: builder_type cannot be None.")
         if not isinstance(builder_type, GenericBuilder) and type_descriptor_key is None:
-            raise ValueError(f'{self.__class__.__name__}: type_descriptor_key cannot be None, if builder_type is not an instance of GenericBuilder.')
+            raise ValueError(
+                f"{self.__class__.__name__}: type_descriptor_key cannot be None, if"
+                " builder_type is not an instance of GenericBuilder."
+            )
         if not isinstance(builder_type, GenericBuilder) and artifact_type is None:
-            raise ValueError(f'{self.__class__.__name__}: artifact_type cannot be None, if builder_type is not an instance of GenericBuilder.')
-        if type_descriptor_key is not None and type_descriptor_key in self._builder_registry:
-            raise ValueError(f'{self.__class__.__name__}: type_descriptor_key {type_descriptor_key} already registered to build {self._builder_registry[type_descriptor_key]}.')
+            raise ValueError(
+                f"{self.__class__.__name__}: artifact_type cannot be None, if"
+                " builder_type is not an instance of GenericBuilder."
+            )
+        if (
+            type_descriptor_key is not None
+            and type_descriptor_key in self._builder_registry
+        ):
+            raise ValueError(
+                f"{self.__class__.__name__}: type_descriptor_key {type_descriptor_key}"
+                " already registered to build"
+                f" {self._builder_registry[type_descriptor_key]}."
+            )
         if isinstance(builder_type, GenericBuilder):
             for type_descriptor_key in builder_type._registry.keys():
                 if type_descriptor_key in self._builder_registry:
-                    raise ValueError(f'{self.__class__.__name__}: trying to register builder \'{builder_type}\', but type_descriptor_key {type_descriptor_key} already registered in factory to build {self._builder_registry[type_descriptor_key]}.')
+                    raise ValueError(
+                        f"{self.__class__.__name__}: trying to register builder"
+                        f" '{builder_type}', but type_descriptor_key"
+                        f" {type_descriptor_key} already registered in factory to build"
+                        f" {self._builder_registry[type_descriptor_key]}."
+                    )
                 else:
-                    self._builder_registry[type_descriptor_key]= builder_type
+                    self._builder_registry[type_descriptor_key] = builder_type
         else:
-            self._builder_registry[type_descriptor_key]= builder_type(type_descriptor_key, artifact_type )
+            # artifact_type creates an error from mypy. Reason unknown. 
+            # Suspicion: mypy cannot deal with having builder_type either as "normal" variable or type-variable
+            self._builder_registry[type_descriptor_key] = builder_type(
+                type_descriptor_key, artifact_type  # type: ignore
+            )
 
-
-
-    def __call__(self, type_descriptor_key: Union[StrDescriptor,IntDescriptor] = None, *args, **kwargs) -> TGenericBuildArtifact:
+    def __call__(
+        self,
+        type_descriptor_key: Union[StrDescriptor, IntDescriptor] = None,
+        *args,
+        **kwargs,
+    ) -> TGenericBuildArtifact:
         """Build and return an object referred to by type_descriptor_key using the builder registered for this object type.
         Args:
             type_descriptor_key: The enum-derived descriptor identifying the class-object to be built.
             *args: Positional arguments passed to the registered object builder.
-            **kwargs: Keyword arguments passed to the registered object builder. 
+            **kwargs: Keyword arguments passed to the registered object builder.
         Returns:
             instance of class type (descendant of GenericBuildArtefact) associated with type_descriptor_key
         Example:
@@ -146,9 +174,16 @@ class Factory:
         """
         if type_descriptor_key is None:
             if self._builder_registry == {}:
-                raise ValueError(f'{self.__class__.__name__}: No build artifacts registered, don\'t know which builder to use.')
-            type_descriptor_key= next(iter(self._builder_registry)) 
+                raise ValueError(
+                    f"{self.__class__.__name__}: No build artifacts registered, don't"
+                    " know which builder to use."
+                )
+            type_descriptor_key = next(iter(self._builder_registry))
         if type_descriptor_key not in self._builder_registry:
-            raise ValueError(f'{self.__class__.__name__}: type_descriptor_key {type_descriptor_key} not yet registered, don\'t know which builder to use.')
-        return self._builder_registry[type_descriptor_key](type_descriptor_key, *args, **kwargs)
-
+            raise ValueError(
+                f"{self.__class__.__name__}: type_descriptor_key {type_descriptor_key}"
+                " not yet registered, don't know which builder to use."
+            )
+        return self._builder_registry[type_descriptor_key](
+            type_descriptor_key, *args, **kwargs
+        )
