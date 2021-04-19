@@ -73,12 +73,12 @@ def runserver( ctx, port, user, foo, bar):
 #    click.echo(f'Climate: {c.settings}')
 
 
-def test_hello_world():
-  runner = CliRunner()
-  result = runner.invoke(cli, ['--debug', 'runserver'])
-  print(result.stdout)
-  assert result.exit_code == 0
-  pytest.fail()
+# def test_hello_world():
+#   runner = CliRunner()
+#   result = runner.invoke(cli, ['--debug', 'runserver'])
+#   print(result.stdout)
+#   assert result.exit_code == 0
+#   pytest.fail()
 
 if __name__ == '__main__':
     cli()

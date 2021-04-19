@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"python.formatting.provider": "black",
+		"yaml.customTags": [
+			"!!python/name",
+		]
+	}
+}

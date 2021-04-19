@@ -4,6 +4,7 @@ __version__= "0.1.0"
 
 from .config.click_config_option import click_config_option
 from .config.settings_doc import with_attrs_docs
+from .config.config_file_types import ConfigFileTypes
 
 from .factory import GenericBuildArtifact, TGenericBuildArtifact, GenericBuilder, TGenericBuilder 
 from .factory import IntDescriptor, StrDescriptor, AutoStrDescriptor, auto

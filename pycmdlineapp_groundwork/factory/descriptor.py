@@ -22,23 +22,27 @@ class StrDescriptor(str, Enum):
     @classmethod
     def allowed_values(cls):
         """Return the _values_ defined in an enum based on StrDescriptor class. This is useful for
-        feeding the allowed values list into a [schema](https://pypi.org/project/schema/) definition
+        feeding the allowed values list into a check of command line arguments 
         and to translate them into enum-types instead of working with str throughout the application.
         Example:
         ```python
-        >>> from schema import Schema, And, Or, Use
+        >>> import click
+        >>> from click.testing import CliRunner
         >>> class FooBar(StrDescriptor):
         ...     foo="bar"
         ...     john="doe"
         >>> allowed= FooBar.allowed_values()
         >>> allowed
         ['bar', 'doe']
-        >>> # Create a schema that accepts a dict with an key 'name' of type str, lowercases it, checks it against
-        >>> # the values defined in enum (['bar', 'doe']) and returns the respective enum-type instead of the original str
-        >>> # note the () in 'FooBar(v)' in the last 'Use'-term, where the names are retrieved from the enum.
-        >>> schema= Schema({'name': And(str, Use(str.lower), Or(*allowed), Use(lambda v: FooBar(v)))})
-        >>> schema.validate({'name': 'Doe'})
-        {'name': <FooBar.john: 'doe'>}
+        >>> @click.command()
+        ... @click.argument('reporttype')
+        ... def report(reporttype, type=FooBar):
+        ...     if reporttype in FooBar.allowed_values():
+        ...         click.echo(reporttype)
+        >>> runner = CliRunner()
+        >>> result = runner.invoke(report, ['bar'])
+        >>> print(result.stdout.strip())
+        bar
 
         ```
         """
