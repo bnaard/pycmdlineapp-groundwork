@@ -21,11 +21,14 @@ nav:
 - Usage:
     - Settings Management: usage/settings.md
 - Reference: 
-    - Factory: reference/factory.md
+  - Configuration: reference/config.md
+  - Factory: reference/factory.md
 - Contributing: contributing.md
 - Changelog: changelog.md
 - Development: development.md
 - License: license.md
+# - Coverage report: coverage.md
+
 
 markdown_extensions:
 - markdown_include.include:
@@ -36,17 +39,40 @@ markdown_extensions:
 - pymdownx.extra
 - admonition
 - pymdownx.details
-- pymdownx.superfences
+- pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+- pymdownx.emoji
+- pymdownx.magiclink
+- pymdownx.snippets:
+    check_paths: true
+- pymdownx.tabbed
+- pymdownx.tasklist
+
 
 plugins:
 - search
-- mkdocstrings
+# - pdf-export
+- autorefs
+# - coverage:
+#     page_name: coverage  # default
+#     html_report_dir: build/coverage
+- mkdocstrings:
+    handlers:
+        python:
+          rendering:
+            show_root_heading: no 
+            show_category_heading: no
+            show_if_no_docstring: yes     
 - exclude:
     glob:
     - _build/*
     - build/*
     - examples/*
     - requirements.txt
+# - mermaid2
 
 extra:
   version:
@@ -56,4 +82,5 @@ extra_css:
   - stylesheets/asciinema-player.css
 extra_javascript:
   - javascripts/asciinema-player.js
-  
+#  - https://unpkg.com/mermaid/dist/mermaid.min.js
+  - javascripts/mermaid.min.js  
