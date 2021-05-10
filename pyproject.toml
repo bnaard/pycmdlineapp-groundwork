@@ -37,6 +37,7 @@ mkdocs-gen-files = "^0.3.1"
 mkdocs-pdf-export-plugin = "^0.5.8"
 mkdocs-mermaid2-plugin = "^0.5.1"
 schema = "^0.7.4"
+poethepoet = "^0.10.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -46,6 +47,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.plugins."mkdocs.plugins"]
 mkdocstrings = "mkdocstrings.plugin:MkdocstringsPlugin"
 
+# [tool.poetry.scripts]
 
 [tool.pytest.ini_options]
 log_cli = true
@@ -55,7 +57,7 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 addopts = "--doctest-modules"
 
 [tool.pytest]
-addopts = "--cov=pycmdlineapp_groundworks --cov-report html"
+addopts = "--cov=$(pwd) --cov-report html"
 
 [tool.pylint]
 max-line-length = 88
@@ -86,26 +88,25 @@ exclude = '''
 '''
 
 [tool.coverage.paths]
-source = '''
-  src/pycmdlineapp_groundworks
-'''
+source = [ "pycmdlineapp_groundworks" ]
 
 [tool.coverage.run]
-branch = true
-source = '''
-  src/pycmdlineapp_groundworks
-'''
-parallel = true
+omit = [ "tests/*", ".venv/*" ]
+# branch = true
+# parallel = true
 
-[tool.coverage.report]
-ignore_errors = true
-precision = 2
-omit = '''
-  tests/*
-'''
+# [tool.coverage.report]
+# ignore_errors = true
+# precision = 2
 
-[tool.coverage.html]
-directory = "build/coverage"
+# [tool.coverage.html]
+# directory = "htmlcov"
 
-[tool.coverage.json]
-output = "build/coverage.json"
+# [tool.coverage.json]
+# output = "jsoncov"
+
+[tool.poe.tasks]
+t = "pytest"
+covtest = "coverage run -m pytest"
+covreport = "coverage html"
+ct = ["covtest", "covreport"]

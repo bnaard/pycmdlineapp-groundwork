@@ -2,7 +2,7 @@
 
 from ..factory.descriptor import AutoStrDescriptor, auto
 
-class ConfigFileTypes(AutoStrDescriptor):
+class ConfigDataTypes(AutoStrDescriptor):
     """Provides an enum-like class defining known config-file types"""
     toml = auto()
     json = auto()

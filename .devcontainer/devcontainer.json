@@ -35,7 +35,7 @@
 	"extensions": [
 		"ms-python.python",
 		"ms-python.vscode-pylance",
-		"bungcip.better-toml",
+		"tamasfe.even-better-toml",
 		"coenraads.bracket-pair-colorizer-2",
 		"eamodio.gitlens",
 		"oleg-shilo.codemap",

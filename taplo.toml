@@ -1,0 +1,1 @@
+exclude = ["tests/config/example_malformed_cfg2.toml"]
