@@ -32,7 +32,7 @@ from pycmdlineapp_groundwork.config.config_file_loaders import (
         ("not_existing.config", ConfigDataTypes.toml),
     ]
 )
-def test_determine_config_file_type(file_path, resulting_type):
+def test_determine_config_data_type(file_path, resulting_type):
     assert _determine_config_file_type(file_path) == resulting_type
 
 
@@ -41,7 +41,7 @@ def _get_mmap(file_path):
     return mmap.mmap(f.fileno(), 0)
 
 @pytest.mark.parametrize(
-    "file_path, expected_exception, file_type, resulting_dict", [
+    "file_path, expected_exception, data_type, resulting_dict", [
         (Path("example_cfgX.json"), FileNotFoundError, None, {} ),
         (Path("does_not_exist.unknown"), FileNotFoundError, None, {} ),
         (Path("tests/config"), IsADirectoryError, None, {} ),
@@ -54,29 +54,32 @@ def _get_mmap(file_path):
         (open("tests/config/example_cfg3.json", "r+b"), None, ConfigDataTypes.json, {"main": "started", "runserver": { "nested_list": [42, 96]}} ),
         (_get_mmap("tests/config/example_cfg3.json"), None, ConfigDataTypes.json, {"main": "started", "runserver": { "nested_list": [42, 96]}} ),
         (StringIO('{"main": "started", "runserver": { "nested_list": [42, 96]}}'), None, ConfigDataTypes.json, {"main": "started", "runserver": { "nested_list": [42, 96]}} ),
+        (StringIO('{"main": "started", "runserver" = { "nested_list": [42, 96]}}'), DictLoadError, ConfigDataTypes.json, {} ),
+        (StringIO('{"main": "started", "runserver" = { "nested_list": [42, 96]}}'), None, ConfigDataTypes.toml, None ),
+        (42, DictLoadError, None, None ),
     ]
 )
-def test_load_dict_from_json_stream_or_file(file_path, expected_exception, file_type, resulting_dict):
+def test_load_dict_from_json_stream_or_file(file_path, expected_exception, data_type, resulting_dict):
     if expected_exception is None:
-        if file_type is None:
+        if data_type is None:
             assert _load_dict_from_json_stream_or_file(file_path) == resulting_dict
         else:
-            assert _load_dict_from_json_stream_or_file(file_path, file_type) == resulting_dict
+            assert _load_dict_from_json_stream_or_file(file_path, data_type) == resulting_dict
             if not isinstance(file_path, Path):
                 if resulting_dict is None:
                     assert file_path.tell() == 0
                 file_path.close()
     else:
         with pytest.raises(expected_exception):
-            if file_type is None:
+            if data_type is None:
                 _ = _load_dict_from_json_stream_or_file(file_path)
             else:
-                _ = _load_dict_from_json_stream_or_file(file_path, file_type)
+                _ = _load_dict_from_json_stream_or_file(file_path, data_type)
 
 
 
 @pytest.mark.parametrize(
-    "file_path, expected_exception, file_type, resulting_dict", [
+    "file_path, expected_exception, data_type, resulting_dict", [
         (Path("example_cfgX.toml"), FileNotFoundError, None, {} ),
         (Path("does_not_exist.unknown"), FileNotFoundError, None, {} ),
         (Path("tests/config"), IsADirectoryError, None, {} ),
@@ -88,30 +91,71 @@ def test_load_dict_from_json_stream_or_file(file_path, expected_exception, file_
         (open("tests/config/example_cfg2.toml"), None, ConfigDataTypes.toml, { "runserver": { "user": "someone"}} ),
         (open("tests/config/example_cfg2.toml", "r+b"), None, ConfigDataTypes.toml, { "runserver": { "user": "someone"}} ),
         (_get_mmap("tests/config/example_cfg2.toml"), None, ConfigDataTypes.toml, { "runserver": { "user": "someone"}} ),
-        (StringIO('[runserver]\nuser = someone'), None, ConfigDataTypes.toml, { "runserver": { "user": "someone"}} ),
+        (StringIO('[runserver]\nuser = "someone"'), None, ConfigDataTypes.toml, { "runserver": { "user": "someone"}} ),
+        (StringIO('[runserver]\nuser = someone'), DictLoadError, ConfigDataTypes.toml, {} ),
+        (StringIO('[runserver]\nuser = someone'), None, ConfigDataTypes.json, None ),
+        (42, DictLoadError, None, None ),
     ]
 )
-def test_load_dict_from_toml_stream_or_file(file_path, expected_exception, file_type, resulting_dict):
+def test_load_dict_from_toml_stream_or_file(file_path, expected_exception, data_type, resulting_dict):
     if expected_exception is None:
-        if file_type is None:
+        if data_type is None:
             assert _load_dict_from_toml_stream_or_file(file_path) == resulting_dict
         else:
-            assert _load_dict_from_toml_stream_or_file(file_path, file_type) == resulting_dict
+            assert _load_dict_from_toml_stream_or_file(file_path, data_type) == resulting_dict
             if not isinstance(file_path, Path):
                 if resulting_dict is None:
                     assert file_path.tell() == 0
                 file_path.close()
     else:
         with pytest.raises(expected_exception):
-            if file_type is None:
+            if data_type is None:
                 _ = _load_dict_from_toml_stream_or_file(file_path)
             else:
-                _ = _load_dict_from_toml_stream_or_file(file_path, file_type)
+                _ = _load_dict_from_toml_stream_or_file(file_path, data_type)
+
+
+@pytest.mark.parametrize(
+    "file_path, expected_exception, data_type, resulting_dict", [
+        (Path("example_cfgX.yaml"), FileNotFoundError, None, {} ),
+        (Path("does_not_exist.unknown"), FileNotFoundError, None, {} ),
+        (Path("tests/config"), IsADirectoryError, None, {} ),
+        (Path("tests/config/example_malformed_cfg1.yaml"), None, None, None ),
+        (open("tests/config/example_malformed_cfg1.yaml"), None, None, None ),
+        (Path("tests/config/example_malformed_cfg1.yaml"), DictLoadError, ConfigDataTypes.yaml, {} ),
+        (Path("tests/config/example_cfg1.yaml"), None, None, { "runserver": { "port": 3333}} ),
+        (Path("tests/config/example_cfg1.yaml"), None, ConfigDataTypes.yaml, { "runserver": { "port": 3333}} ),
+        (open("tests/config/example_cfg1.yaml"), None, ConfigDataTypes.yaml, { "runserver": { "port": 3333}} ),
+        (open("tests/config/example_cfg1.yaml", "r+b"), None, ConfigDataTypes.yaml, { "runserver": { "port": 3333}} ),
+        (_get_mmap("tests/config/example_cfg1.yaml"), None, ConfigDataTypes.yaml, { "runserver": { "port": 3333}} ),
+        (StringIO('runserver:\n    port: 3333'), None, ConfigDataTypes.yaml, { "runserver": { "port": 3333}} ),
+        (StringIO('[runserver]\n    port: 3333'), DictLoadError, ConfigDataTypes.yaml, {} ),
+        (StringIO('[runserver]\n    port: 3333'), None, ConfigDataTypes.json, None ),
+        (42, DictLoadError, None, None ),
+    ]
+)
+def test_load_dict_from_yaml_stream_or_file(file_path, expected_exception, data_type, resulting_dict):
+    if expected_exception is None:
+        if data_type is None:
+            assert _load_dict_from_yaml_stream_or_file(file_path) == resulting_dict
+        else:
+            assert _load_dict_from_yaml_stream_or_file(file_path, data_type) == resulting_dict
+            if not isinstance(file_path, Path):
+                if resulting_dict is None:
+                    assert file_path.tell() == 0
+                file_path.close()
+    else:
+        with pytest.raises(expected_exception):
+            if data_type is None:
+                _ = _load_dict_from_yaml_stream_or_file(file_path)
+            else:
+                _ = _load_dict_from_yaml_stream_or_file(file_path, data_type)
+
 
 
 
 @pytest.mark.parametrize(
-    "file_path, expected_exception, file_type, resulting_dict", [
+    "file_path, expected_exception, data_type, resulting_dict", [
         (Path("example_cfg1.yaml"), FileNotFoundError, None, {} ),
         (Path("does_not_exist.unknown"), FileNotFoundError, None, {} ),
         (Path("tests/config"), IsADirectoryError, None, {} ),
@@ -129,18 +173,18 @@ def test_load_dict_from_toml_stream_or_file(file_path, expected_exception, file_
         (Path("tests/config/example_cfg1.yaml"), None, ConfigDataTypes.unknown, { "runserver" : { "port" : 3333 } } ),
     ]
 )
-def test_load_dict_from_file(file_path, expected_exception, file_type, resulting_dict):
+def test_load_dict_from_file(file_path, expected_exception, data_type, resulting_dict):
     if expected_exception is None:
-        if file_type is None:
+        if data_type is None:
             assert load_dict_from_file(file_path) == resulting_dict
         else:
-            assert load_dict_from_file(file_path, file_type) == resulting_dict
+            assert load_dict_from_file(file_path, data_type) == resulting_dict
     else:
         with pytest.raises(expected_exception):
-            if file_type is None:
+            if data_type is None:
                 _ = load_dict_from_file(file_path)
             else:
-                _ = load_dict_from_file(file_path, file_type)
+                _ = load_dict_from_file(file_path, data_type)
 
 
 @st.composite
@@ -151,7 +195,7 @@ def fspath_strategy(draw, path_elements=st.text(printable)):
         path = path / Path(draw(path_elements))      
     return Path(path)
 
-@given(file_path=fspath_strategy(), file_type=st.sampled_from([el for el in ConfigDataTypes]))
-def test_fuzzy_load_dict_from_file(file_path, file_type):
+@given(file_path=fspath_strategy(), data_type=st.sampled_from([el for el in ConfigDataTypes]))
+def test_fuzzy_load_dict_from_file(file_path, data_type):
     with pytest.raises((FileNotFoundError, IsADirectoryError)):
-        _ = load_dict_from_file(file_path, file_type)
+        _ = load_dict_from_file(file_path, data_type)
