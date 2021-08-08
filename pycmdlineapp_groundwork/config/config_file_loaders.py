@@ -15,6 +15,7 @@ from typing import Any, MutableMapping, Dict, Callable, cast, Union, Sequence, A
 from pydantic import BaseSettings
 from .config_data_types import ConfigDataTypes
 from ..utility.typing import FilePathOrBuffer, Buffer, mmap
+from ..utility.dict_deep_update import dict_deep_update
 
 MAX_CONFIG_FILE_SIZE = 1024 * 1024 * 1024
 
@@ -364,21 +365,21 @@ def load_dict_from_file(
     for resolve_data_type in resolve_order:
         if resolve_data_type == ConfigDataTypes.json:
             result = _load_dict_from_json_stream_or_file(
-                file_path, data_type, encoding=encoding
+                file_path, determined_data_type, encoding=encoding
             )
             if result is not None:
                 return result
 
         elif resolve_data_type == ConfigDataTypes.toml:
             result = _load_dict_from_toml_stream_or_file(
-                file_path, data_type, encoding=encoding
+                file_path, determined_data_type, encoding=encoding
             )
             if result is not None:
                 return result
 
         elif resolve_data_type == ConfigDataTypes.yaml:
             result = _load_dict_from_yaml_stream_or_file(
-                file_path, data_type, encoding=encoding
+                file_path, determined_data_type, encoding=encoding
             )
             if result is not None:
                 return result
@@ -401,15 +402,16 @@ def _settings_config_load(
     file_path: Union[FilePathOrBuffer, Sequence[FilePathOrBuffer]] = None,
     data_type: ConfigDataTypes = ConfigDataTypes.infer,
     encoding: str = "utf-8",
-    error_handling: str = "abort",
+    error_handling: str = "propagate",
 ) -> Dict[str, Any]:
     """Loads settings from a file, stream or buffer into a dictionary that can be loaded by pydantic into settings classes.
     This function is not intended to be called directly, but to be used in connection [get_settings_config_load_function][pycmdlineapp_groundwork.config.config_file_loaders.get_settings_config_load_function]
     In case of permission errors or load errors the standard behaviour of
-    this function is to abort the program with `sys.exit()`. If successful, this
+    this function is to propagate the exceptions to the caller. If successful, this
     function loads the first data source found/accessible/readable into a dictionary
     and returns this dictionary so that pydantic can try to set values in settings from it. All further
-    sources are discarded.
+    sources (e.g. not found files) do not lead to exceptions or abortion, but are silently discarded.
+
     Args:
         file_path: path, list of paths, stream or list of streams to configuration data
         data_type: type of configuration data, if known or pre-defined
@@ -418,6 +420,7 @@ def _settings_config_load(
             `abort` calls `sys-exit()` on load error,
             `ignore` does nothing and ultimatley returns an empty dictionary, if no data could be loaded and
             `propagate` raises the exceptions and leaves handling to the caller
+            Default to `propagate`, if no value or `None` is given.
     Raises:
         ValueError: if error_handling is not one of `["abort", "ignore", "propagate"]` or if file_path is None
         IOError: if eg. permission to a given file is denied and error_handling is `propagate`
@@ -427,6 +430,8 @@ def _settings_config_load(
 
     """
     allowed_error_handling = ["abort", "ignore", "propagate"]
+    if error_handling is None:
+        error_handling = "propagate"
     if error_handling not in allowed_error_handling:
         raise ValueError(
             f"Invalid error handling type. Expected one of: {allowed_error_handling}"
@@ -448,30 +453,26 @@ def _settings_config_load(
     else:
         config_data_elements = [file_path]  # type: ignore
 
+    result_dict: Dict[str, Any] = {}
+
     for config_data in config_data_elements:
         exists = False
         if isinstance(config_data, str):
             config_data = Path(config_data)
         if isinstance(config_data, Path):
             config_data = config_data.resolve()
-            try:
-                exists = config_data.is_file()
-            except IOError as e:
-                # catch permission errors, which are propagated instead of returning false for is_file()
-                if error_handling == "abort":
-                    print(f"{e}\nAbort!")
-                    sys.exit()
-                elif error_handling == "propagate":
-                    raise e
+            exists = config_data.is_file()
         else:
             exists = True
 
         if exists:
             try:
-                return cast(
+                load_result: Dict[str, Any] = cast(
                     Dict[str, Any],
                     load_dict_from_file(config_data, data_type, encoding=encoding),
                 )
+                dict_deep_update(result_dict, load_result) # type: ignore
+
             except DictLoadError as e:
                 if error_handling == "abort":
                     print(
@@ -483,7 +484,15 @@ def _settings_config_load(
                 elif error_handling == "propagate":
                     raise e
 
-    return {}
+            except IOError as e:
+                # catch permission errors, which are propagated instead of returning false for is_file()
+                if error_handling == "abort":
+                    print(f"{e}\nAbort!")
+                    sys.exit()
+                elif error_handling == "propagate":
+                    raise e
+
+    return result_dict
 
 
 def get_settings_config_load_function(

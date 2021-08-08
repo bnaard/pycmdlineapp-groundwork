@@ -27,7 +27,7 @@ nav:
 - Changelog: changelog.md
 - Development: development.md
 - License: license.md
-# - Coverage report: coverage.md
+- Coverage report: coverage.md
 
 
 markdown_extensions:
@@ -56,9 +56,9 @@ plugins:
 - search
 # - pdf-export
 - autorefs
-# - coverage:
-#     page_name: coverage  # default
-#     html_report_dir: build/coverage
+- coverage:
+    page_name: coverage  # default
+    html_report_dir: build/coverage
 - mkdocstrings:
     handlers:
         python:

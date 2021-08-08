@@ -27,17 +27,17 @@ mkdocs-material = "^7.0.6"
 markdown-include = "^0.6.0"
 mkdocs-exclude = "^1.0.2"
 mkdocstrings = "^0.15.0"
-mike = "^0.6.0"
 asciinema = "^2.0.2"
 black = "^20.8b1"
 mypy = "^0.812"
 hypothesis = "^6.10.0"
-mkdocs-coverage = "^0.2.1"
 mkdocs-gen-files = "^0.3.1"
 mkdocs-pdf-export-plugin = "^0.5.8"
 mkdocs-mermaid2-plugin = "^0.5.1"
 schema = "^0.7.4"
 poethepoet = "^0.10.0"
+mkdocs-coverage = "^0.2.4"
+mike = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -105,8 +105,13 @@ omit = [ "tests/*", ".venv/*" ]
 # [tool.coverage.json]
 # output = "jsoncov"
 
+[tool.poe.env]
+_VERSION = "v0.1.0"
+
 [tool.poe.tasks]
 t = "pytest"
 covtest = "coverage run -m pytest"
 covreport = "coverage html"
 ct = ["covtest", "covreport"]
+db = ["mike deploy $_VERSION", "mike set-default $_VERSION", "mike alias $_VERSION latest"]
+d = ["mike serve"]
